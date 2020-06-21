@@ -36,12 +36,20 @@ def load_data(url, data_size):
 def preprocess_texts(texts, lower=True, filters=r"[!\"'#$%&()*\+,-./:;<=>?@\\\[\]^_`{|}~]"):
     preprocessed_texts = []
     for text in texts:
+        # lower
         if lower:
-            text = ' '.join(word.lower() for word in text.split(" "))
+            text = text.lower()
+
+        # remove items text in () ex. (Reuters)
+        # may want to refine to only remove if at end of text
+        text = re.sub(r'\([^)]*\)', '', text)
+
+        # spacing and filters
         text = re.sub(r"([.,!?])", r" \1 ", text)
         text = re.sub(filters, r"", text)
         text = re.sub(' +', ' ', text)  # remove multiple spaces
         text = text.strip()
+
         preprocessed_texts.append(text)
     return preprocessed_texts
 
@@ -152,7 +160,7 @@ class LabelEncoder(object):
         return cls(**kwargs)
 
 
-def pad_sequences(sequences, max_seq_len):
+def pad_sequences(sequences, max_seq_len=0):
     max_seq_len = max(max_seq_len, max(len(sequence)
                                        for sequence in sequences))
     padded_sequences = np.zeros((len(sequences), max_seq_len))

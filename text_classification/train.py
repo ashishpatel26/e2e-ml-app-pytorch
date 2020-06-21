@@ -186,43 +186,43 @@ if __name__ == '__main__':
                         help="initialization seed")
     parser.add_argument('--shuffle', action='store_true',
                         default=False, help="shuffle your data")
-    parser.add_argument('--data_url', type=str,
+    parser.add_argument('--data-url', type=str,
                         required=True, help="URL of data file")
     parser.add_argument('--lower', action='store_true',
                         default=False, help="lowercase all text")
-    parser.add_argument('--char_level', action='store_true',
+    parser.add_argument('--char-level', action='store_true',
                         default=False, help="split text to character level")
     parser.add_argument('--filters', type=str,
                         default=r"[!\"'#$%&()*\+,-./:;<=>?@\\\[\]^_`{|}~]",
                         help="text preprocessing filters")
-    parser.add_argument('--data_size', type=float,
+    parser.add_argument('--data-size', type=float,
                         default=1.0, help="proportion of data to use")
-    parser.add_argument('--train_size', type=float,
+    parser.add_argument('--train-size', type=float,
                         default=0.7, help="train data proportion")
-    parser.add_argument('--val_size', type=float,
+    parser.add_argument('--val-size', type=float,
                         default=0.15, help="val data proportion")
-    parser.add_argument('--test_size', type=float,
+    parser.add_argument('--test-size', type=float,
                         default=0.15, help="test data proportion")
-    parser.add_argument('--num_epochs', type=int,
+    parser.add_argument('--num-epochs', type=int,
                         default=10, help="# of epochs to train")
-    parser.add_argument('--batch_size', type=int, default=64,
+    parser.add_argument('--batch-size', type=int, default=64,
                         help="# of samples per batch")
-    parser.add_argument('--embedding_dim', type=int,
+    parser.add_argument('--embedding-dim', type=int,
                         default=100,
                         help="dimension of embeddings (50, 100, 200, 300 if using GloVe)")
-    parser.add_argument('--use_glove', action='store_true',
+    parser.add_argument('--use-glove', action='store_true',
                         default=False, help="Use pretrained GloVe embeddings")
-    parser.add_argument('--freeze_embeddings', action='store_true',
+    parser.add_argument('--freeze-embeddings', action='store_true',
                         default=False, help="Freeze embeddings during training")
-    parser.add_argument('--filter_sizes', nargs='+',
+    parser.add_argument('--filter-sizes', nargs='+',
                         default=[2, 3, 4], type=int, help="cnn filter sizes")
-    parser.add_argument('--num_filters', type=int, default=50,
+    parser.add_argument('--num-filters', type=int, default=50,
                         help="# of filters per cnn filter size")
-    parser.add_argument('--hidden_dim', type=int, default=128,
+    parser.add_argument('--hidden-dim', type=int, default=128,
                         help="# of hidden units in fc dense layers")
-    parser.add_argument('--dropout_p', type=float, default=0.1,
+    parser.add_argument('--dropout-p', type=float, default=0.1,
                         help="dropout proportion in fc dense layers")
-    parser.add_argument('--learning_rate', type=float,
+    parser.add_argument('--learning-rate', type=float,
                         default=1e-4, help="initial learning rate")
     parser.add_argument('--patience', type=int, default=3,
                         help="# of epochs of continued performance regression")
@@ -275,12 +275,14 @@ if __name__ == '__main__':
         f"  {X_tokenizer}")
 
     # Convert texts to sequences of indices
+    original_text = X_train[0]
     X_train = np.array(X_tokenizer.texts_to_sequences(X_train))
     X_val = np.array(X_tokenizer.texts_to_sequences(X_val))
     X_test = np.array(X_tokenizer.texts_to_sequences(X_test))
     preprocessed_text = X_tokenizer.sequences_to_texts([X_train[0]])[0]
     config.logger.info(
         "Text to indices:\n"
+        f"  (raw) {original_text}\n"
         f"  (preprocessed) → {preprocessed_text}\n"
         f"  (tokenized) → {X_train[0]}")
 
@@ -409,4 +411,3 @@ if __name__ == '__main__':
         wandb.run.dir, 'config.json'))
     X_tokenizer.save(fp=os.path.join(wandb.run.dir, 'X_tokenizer.json'))
     y_tokenizer.save(fp=os.path.join(wandb.run.dir, 'y_tokenizer.json'))
-

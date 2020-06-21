@@ -11,7 +11,10 @@ from text_classification import data
     ('Hello', 'hello'),
     ('HELLO', 'hello'),
     ('Hello, world!', 'hello world'),
-    ('Hello, world!', 'hello world')
+    ('Hello, world!', 'hello world'),
+    ('Hello, world (Reuters)', 'hello world'),
+    # may need to refine to remove only last () regex match
+    ('Hello (might be important) world!', 'hello world')
 ])
 def test_preprocess_texts(texts, preprocessed_texts):
     assert data.preprocess_texts(texts=[texts]) == [preprocessed_texts]
